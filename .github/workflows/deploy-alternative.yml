@@ -8,6 +8,7 @@ on:
 jobs:
   deploy_blog:
     runs-on: ubuntu-latest
+    environment: VERCEL_TOKEN
     
     steps:
       - name: Checkout repository
