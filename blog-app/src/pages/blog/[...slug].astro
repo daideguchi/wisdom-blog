@@ -3,19 +3,19 @@ import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
   // Zennのarticlesディレクトリから全てのMarkdown投稿を取得
-  const posts = await Astro.glob('../../../articles/*.md');
+  const posts = import.meta.glob('../../../articles/*.md', { eager: true });
   
-  return posts.map(post => {
-    const slug = post.file.split('/').pop()?.replace('.md', '') || '';
+  return Object.entries(posts).map(([path, post]) => {
+    const slug = path.split('/').pop()?.replace('.md', '') || '';
     return {
       params: { slug },
-      props: { post },
+      props: { post, slug },
     };
   });
 }
 
-const { post } = Astro.props;
-const { Content } = await post.default();
+const { post, slug } = Astro.props;
+const { Content } = post;
 ---
 
 <Layout title={`${post.frontmatter.title} | WISDOM Blog`}>
@@ -48,7 +48,7 @@ const { Content } = await post.default();
       </p>
       
       <div class="zenn-link">
-        <p>この記事は<a href={`https://zenn.dev/daideguchi/articles/${post.file.split('/').pop()?.replace('.md', '')}`} target="_blank" rel="noopener">Zenn</a>でも公開されています</p>
+        <p>この記事は<a href={`https://zenn.dev/daideguchi/articles/${slug}`} target="_blank" rel="noopener">Zenn</a>でも公開されています</p>
       </div>
     </footer>
   </article>

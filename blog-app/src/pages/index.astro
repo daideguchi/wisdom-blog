@@ -1,8 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-// Zennのarticlesディレクトリから全てのMarkdown投稿を取得
-const posts = await Astro.glob('../../articles/*.md');
+// Zennのarticlesディレクトリから全てのMarkdown投稿を取得  
+const postsGlob = import.meta.glob('../../articles/*.md', { eager: true });
+const posts = Object.entries(postsGlob).map(([path, post]) => ({
+  ...post,
+  slug: path.split('/').pop()?.replace('.md', '') || ''
+}));
 
 // published: trueの記事のみを表示し、日付でソート
 const publishedPosts = posts
@@ -28,7 +32,7 @@ const publishedPosts = posts
                 <span class="type">{post.frontmatter.type}</span>
               </div>
               <h3>
-                <a href={`/blog/${post.file.split('/').pop()?.replace('.md', '')}`}>
+                <a href={`/blog/${post.slug}`}>
                   {post.frontmatter.title}
                 </a>
               </h3>
