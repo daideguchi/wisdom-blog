@@ -1,4 +1,4 @@
-name: Deploy Alternative (Direct Vercel CLI)
+name: Deploy Blog to Vercel
 
 on:
   push:
