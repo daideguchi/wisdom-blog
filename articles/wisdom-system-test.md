@@ -35,9 +35,9 @@ graph TD
 
 1. ✅ Zenn CLI記事作成
 2. ✅ Astroブログ記事表示
-3. ⏳ GitHub Actions実行
-4. ⏳ Zenn Connect同期
-5. ⏳ Vercelデプロイ
+3. 🔄 GitHub Actions実行中
+4. 🔄 Zenn Connect同期中
+5. 🔄 Vercelデプロイ中
 
 ## 🚀 期待される結果
 
