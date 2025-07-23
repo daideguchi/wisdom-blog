@@ -1,0 +1,44 @@
+name: Deploy Alternative (Direct Vercel CLI)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy_blog:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'blog-app/package-lock.json'
+
+      - name: Install Dependencies
+        working-directory: ./blog-app
+        run: npm install
+
+      - name: Build Astro Site
+        working-directory: ./blog-app
+        run: npm run build
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Deploy to Vercel with CLI
+        working-directory: ./blog-app
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          echo "VERCEL_TOKEN exists: ${{ secrets.VERCEL_TOKEN != '' }}"
+          echo "VERCEL_ORG_ID exists: ${{ secrets.VERCEL_ORG_ID != '' }}"
+          echo "VERCEL_PROJECT_ID exists: ${{ secrets.VERCEL_PROJECT_ID != '' }}"
+          vercel --token $VERCEL_TOKEN --prod --yes
