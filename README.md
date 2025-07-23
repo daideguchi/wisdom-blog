@@ -177,4 +177,4 @@ npm run obsidian:setup        # Obsidian統合設定
 
 ---
 
-> **「第二の脳」を構築し、知識を知恵に変える旅を始めましょう** 🚀
+> **「第二の脳」を構築し、知識を知恵に変える旅を始めましょう** 🚀# GitHub Actions Test
