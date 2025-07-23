@@ -1,0 +1,110 @@
+{
+  "name": "post_tool",
+  "display_name": "WISDOM",
+  "description": "開発ログ自動記事化ツール - AI拡張知識管理システム",
+  "created_at": "2025-07-23",
+  "status": "active",
+  "priority": "high",
+  "kanban_board_id": "project_wisdom_board",
+  "slack_channel": "#proj-post-tool",
+  "repository": {
+    "path": "/projects/post_tool",
+    "main_language": "Python",
+    "framework": "Astro + Python"
+  },
+  "dependencies": [
+    "coding-rule2/src/ai",
+    "coding-rule2/src/memory"
+  ],
+  "apis": {
+    "claude": {
+      "required": true,
+      "env_vars": ["ANTHROPIC_API_KEY"]
+    },
+    "github": {
+      "required": true,
+      "env_vars": ["GITHUB_TOKEN"]
+    },
+    "vercel": {
+      "required": true,
+      "env_vars": ["VERCEL_TOKEN"]
+    }
+  },
+  "integrations": {
+    "obsidian": {
+      "vault_path": "/Users/dd/Library/Mobile Documents/iCloud~md~obsidian/Documents/",
+      "integration_folder": "00_POST_TOOL_Integration",
+      "auto_sync": true
+    },
+    "zenn": {
+      "platform": "zenn.dev",
+      "auto_sync": true,
+      "connect_enabled": true
+    },
+    "astro_blog": {
+      "hosting": "vercel",
+      "domain": "custom_domain",
+      "auto_deploy": true
+    }
+  },
+  "hooks": {
+    "pre_work": [
+      "make declare-president",
+      "cd projects/post_tool && python automation/system_health_monitor.py"
+    ],
+    "post_work": [
+      "make sync-todo",
+      "cd projects/post_tool && python automation/obsidian_sync.py"
+    ]
+  },
+  "automation": {
+    "git_analysis": {
+      "enabled": true,
+      "trigger": "post-commit",
+      "script": "automation/article_generator.py"
+    },
+    "log_monitoring": {
+      "enabled": true,
+      "interval": "5min",
+      "script": "automation/dev_log_watcher.py"
+    },
+    "content_publishing": {
+      "enabled": true,
+      "platforms": ["zenn", "astro_blog"],
+      "auto_publish": false
+    }
+  },
+  "quality_metrics": {
+    "content_quality_threshold": 80,
+    "seo_score_target": 85,
+    "automation_success_rate": 95,
+    "obsidian_sync_rate": 100
+  },
+  "monitoring": {
+    "system_health": true,
+    "content_performance": true,
+    "integration_status": true,
+    "ai_api_usage": true
+  },
+  "cron_jobs": [
+    {
+      "schedule": "*/5 * * * *",
+      "command": "python automation/dev_log_watcher.py",
+      "description": "ログファイル監視"
+    },
+    {
+      "schedule": "0 * * * *", 
+      "command": "python automation/system_health_monitor.py",
+      "description": "システムヘルスチェック"
+    },
+    {
+      "schedule": "0 6 * * *",
+      "command": "python automation/obsidian_sync.py", 
+      "description": "Obsidian統合同期"
+    }
+  ],
+  "team": {
+    "ai_roles": ["CONTENT_ANALYZER", "KNOWLEDGE_CURATOR", "QUALITY_CONTROLLER"],
+    "human_oversight": true
+  }
+}

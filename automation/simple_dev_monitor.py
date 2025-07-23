@@ -116,7 +116,8 @@ class SimpleDevMonitor:
     
     def save_to_obsidian(self, log_entry):
         """Obsidianに軽量ログ保存"""
-        obsidian_log = self.project_dir / "obsidian_vault" / "00_INBOX" / f"dev_log_{datetime.now().strftime('%Y%m%d')}.md"
+        obsidian_vault = Path("/Users/dd/Library/Mobile Documents/iCloud~md~obsidian/Documents")
+        obsidian_log = obsidian_vault / "00_INBOX" / f"dev_log_{datetime.now().strftime('%Y%m%d')}.md"
         
         content = f"## {log_entry['timestamp']}\n\n"
         if log_entry['type'] == 'file_changes':

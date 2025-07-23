@@ -19,6 +19,9 @@ class ZettelkastenProcessor:
         self.moc_path = os.path.join(self.obsidian_vault, "03_MOC")
         self.output_path = os.path.join(self.obsidian_vault, "04_OUTPUT")
         
+        print(f"✅ Obsidian Vault: {self.obsidian_vault}")
+        print(f"📥 INBOX: {self.inbox_path}")
+        
         self.ensure_folders()
     
     def ensure_folders(self):
