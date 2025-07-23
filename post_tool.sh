@@ -5,6 +5,7 @@
 PROJECT_DIR="/Users/dd/Desktop/1_dev/coding-rule2/projects/post_tool"
 BRAIN_LOGS="/Users/dd/Desktop/1_dev/coding-rule2/runtime/logs"
 OBSIDIAN_INBOX="/Users/dd/Library/Mobile Documents/iCloud~md~obsidian/Documents/00_INBOX"
+OBSIDIAN_CLIPPINGS="/Users/dd/Library/Mobile Documents/iCloud~md~obsidian/Documents/Clippings"
 
 case "$1" in
     # ========== 自動化管理 ==========
@@ -132,6 +133,149 @@ EOF
         echo "✅ メモ作成: $MEMO_FILE"
         ;;
     
+    # ========== Webクリッピング ==========
+    "clip")
+        if [ -z "$2" ]; then
+            echo "❌ URLを指定してください"
+            echo "例: ./post_tool.sh clip https://example.com"
+            exit 1
+        fi
+        
+        URL="$2"
+        TIMESTAMP=$(date '+%Y-%m-%d_%H%M%S')
+        CLIP_FILE="$OBSIDIAN_INBOX/webclip_$TIMESTAMP.md"
+        
+        echo "📄 Webページクリッピング中..."
+        echo "🔗 URL: $URL"
+        
+        # curlでWebページを取得してタイトルを抽出
+        TITLE=$(curl -s "$URL" | grep -o '<title[^>]*>[^<]*</title>' | sed 's/<title[^>]*>//;s/<\/title>//' | head -1)
+        
+        # タイトルが取得できない場合はURLから生成
+        if [ -z "$TITLE" ]; then
+            TITLE="Web記事 - $(basename "$URL")"
+        fi
+        
+        cat > "$CLIP_FILE" << EOF
+## $TITLE
+
+**クリップ日時**: $(date '+%Y-%m-%d %H:%M:%S')
+**元URL**: $URL
+
+### 概要
+<!-- Webページの内容をここに要約 -->
+
+### メモ
+<!-- 気になった点や学んだことを記録 -->
+
+### 関連リンク
+- [元記事]($URL)
+
+### タグ
+#webclip #bookmark #inbox
+
+---
+**自動取得**: $(date '+%Y-%m-%d %H:%M:%S')
+EOF
+        
+        echo "✅ Webクリッピング完了: $CLIP_FILE"
+        echo "💡 ファイルを開いて内容を編集してください"
+        ;;
+    
+    "clip-with-summary")
+        if [ -z "$2" ]; then
+            echo "❌ URLを指定してください" 
+            echo "例: ./post_tool.sh clip-with-summary https://example.com"
+            exit 1
+        fi
+        
+        URL="$2"
+        TIMESTAMP=$(date '+%Y-%m-%d_%H%M%S')
+        CLIP_FILE="$OBSIDIAN_INBOX/webclip_$TIMESTAMP.md"
+        
+        echo "📄 AI要約付きWebクリッピング中..."
+        echo "🔗 URL: $URL"
+        
+        # curlでWebページの内容を取得
+        WEB_CONTENT=$(curl -s "$URL" | python3 -c "
+import sys, re
+from html import unescape
+
+html = sys.stdin.read()
+# タイトル抽出
+title_match = re.search(r'<title[^>]*>([^<]*)</title>', html, re.IGNORECASE)
+title = title_match.group(1) if title_match else 'Web記事'
+
+# 本文抽出（簡易版）
+text = re.sub(r'<script[^>]*>.*?</script>', '', html, flags=re.DOTALL | re.IGNORECASE)
+text = re.sub(r'<style[^>]*>.*?</style>', '', text, flags=re.DOTALL | re.IGNORECASE)
+text = re.sub(r'<[^>]+>', '', text)
+text = unescape(text)
+text = re.sub(r'\s+', ' ', text).strip()
+
+print(f'TITLE:{title}')
+print(f'CONTENT:{text[:1000]}')  # 最初の1000文字
+")
+        
+        TITLE=$(echo "$WEB_CONTENT" | grep '^TITLE:' | cut -d: -f2-)
+        CONTENT=$(echo "$WEB_CONTENT" | grep '^CONTENT:' | cut -d: -f2-)
+        
+        cat > "$CLIP_FILE" << EOF
+## $TITLE
+
+**クリップ日時**: $(date '+%Y-%m-%d %H:%M:%S')
+**元URL**: $URL
+
+### 元記事の内容（抜粋）
+$CONTENT
+
+### AI要約
+<!-- AIによる要約をここに追加予定 -->
+
+### メモ
+<!-- 気になった点や学んだことを記録 -->
+
+### 関連リンク
+- [元記事]($URL)
+
+### タグ
+#webclip #bookmark #ai-summary #inbox
+
+---
+**自動取得**: $(date '+%Y-%m-%d %H:%M:%S')
+EOF
+        
+        echo "✅ AI要約付きクリッピング完了: $CLIP_FILE"
+        echo "💡 AI要約は次回のzettel処理で自動生成されます"
+        ;;
+    
+    "sync-clippings")
+        echo "🔄 既存Clippings統合処理中..."
+        
+        if [ ! -d "$OBSIDIAN_CLIPPINGS" ]; then
+            echo "❌ Clippingsフォルダが見つかりません: $OBSIDIAN_CLIPPINGS"
+            exit 1
+        fi
+        
+        SYNC_COUNT=0
+        
+        # Clippingsフォルダ内のマークダウンファイルをINBOXに同期
+        find "$OBSIDIAN_CLIPPINGS" -name "*.md" -type f | while read -r clip_file; do
+            filename=$(basename "$clip_file")
+            target_file="$OBSIDIAN_INBOX/synced_${filename}"
+            
+            # 既に同期済みかチェック
+            if [ ! -f "$target_file" ]; then
+                cp "$clip_file" "$target_file"
+                echo "📄 同期: $filename"
+                SYNC_COUNT=$((SYNC_COUNT + 1))
+            fi
+        done
+        
+        echo "✅ Clippings統合完了（$SYNC_COUNT件）"
+        echo "💡 統合されたクリップは次回のzettel処理で自動整理されます"
+        ;;
+    
     # ========== Git管理 ==========
     "push")
         echo "📤 Git自動プッシュ中..."
@@ -209,6 +353,11 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
         echo "📝 メモ作成:"
         echo "  ./post_tool.sh memo      - クイックメモ"
         echo "  ./post_tool.sh memo 'タイトル' - タイトル付きメモ"
+        echo ""
+        echo "🌐 Webクリッピング:"
+        echo "  ./post_tool.sh clip URL  - 基本クリッピング"
+        echo "  ./post_tool.sh clip-with-summary URL - AI要約付きクリッピング"
+        echo "  ./post_tool.sh sync-clippings - 既存Clippings統合"
         echo ""
         echo "📤 Git管理:"
         echo "  ./post_tool.sh push      - 自動コミット&プッシュ"
