@@ -78,7 +78,7 @@ class SmartArticleGenerator:
         
         if not log_files:
             self.log_event("ログファイルなし - 記事生成スキップ")
-            return False
+            return None
         
         # 簡単な活動量チェック
         total_content = ""
@@ -93,38 +93,56 @@ class SmartArticleGenerator:
         # 最小限の活動量チェック
         if len(total_content) < 200:  # 200文字未満は記事生成しない
             self.log_event("活動量不足 - 記事生成スキップ")
-            return False
+            return None
         
-        return True
+        return total_content
     
     def generate_simple_article(self):
-        """シンプル記事生成"""
-        if not self.analyze_logs_for_article():
+        """シンプル記事生成"""  
+        log_content = self.analyze_logs_for_article()
+        if not log_content:
             return False
         
         try:
             from anthropic import Anthropic
             client = Anthropic(api_key=self.anthropic_api_key)
             
-            # 簡単なプロンプト
-            prompt = """
+            # 開発ログから記事生成プロンプト
+            prompt = f"""
 最近の開発活動から技術記事を生成してください。
 
-以下の要件で記事を作成：
+開発ログ情報：
+{log_content}
+
+以下の要件でZenn記事を作成：
 1. タイトルは具体的で魅力的に
 2. 実際の開発体験に基づく内容
-3. 文字数は600文字程度
-4. Zenn記事形式で出力
+3. 文字数は800-1200文字程度
+4. Zenn Markdown形式で直接出力
 
-JSON形式で出力：
-{
-    "title": "記事タイトル",
-    "emoji": "🛠️",
-    "type": "tech",
-    "topics": ["開発", "技術"],
-    "published": false,
-    "content": "記事本文"
-}
+以下の形式で出力：
+---
+title: "記事タイトル"
+emoji: "適切な絵文字"
+type: "tech"
+topics: ["適切なトピック1", "適切なトピック2"]
+published: false
+published_at: "{datetime.now().strftime('%Y-%m-%d')}"
+---
+
+# 記事タイトル
+
+## はじめに
+(開発背景・動機)
+
+## 実装・解決内容
+(具体的な技術内容)
+
+## 学んだこと・ポイント
+(重要なポイントや注意事項)
+
+## まとめ
+(締めくくり)
 """
             
             response = client.messages.create(

@@ -1,0 +1,129 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Zennのarticlesディレクトリから全てのMarkdown投稿を取得
+const posts = await Astro.glob('../../articles/*.md');
+
+// published: trueの記事のみを表示し、日付でソート
+const publishedPosts = posts
+  .filter(post => post.frontmatter.published)
+  .sort((a, b) => new Date(b.frontmatter.published_at || 0).getTime() - new Date(a.frontmatter.published_at || 0).getTime());
+---
+
+<Layout title="WISDOM Blog - 開発ログ自動記事化">
+  <h1>🚀 WISDOM Blog</h1>
+  <p>開発ログから自動生成された技術記事を公開しています</p>
+  
+  <section>
+    <h2>📝 最新記事</h2>
+    {publishedPosts.length === 0 ? (
+      <p>まだ記事がありません。<code>articles/</code>フォルダに記事を追加してください。</p>
+    ) : (
+      <ul class="post-list">
+        {publishedPosts.map((post) => (
+          <li class="post-item">
+            <article>
+              <div class="post-meta">
+                <span class="emoji">{post.frontmatter.emoji || '📝'}</span>
+                <span class="type">{post.frontmatter.type}</span>
+              </div>
+              <h3>
+                <a href={`/blog/${post.file.split('/').pop()?.replace('.md', '')}`}>
+                  {post.frontmatter.title}
+                </a>
+              </h3>
+              <div class="topics">
+                {post.frontmatter.topics?.map((topic: string) => (
+                  <span class="topic-tag">{topic}</span>
+                ))}
+              </div>
+              <time>{post.frontmatter.published_at}</time>
+            </article>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+  
+  <section class="about">
+    <h2>🎯 このブログについて</h2>
+    <p>
+      このブログは、日々の開発活動から自動的に技術記事を生成するWISDOMシステムによって運営されています。
+      GitログやObsidianノートを分析し、AIが記事化した内容をZennと同時公開しています。
+    </p>
+  </section>
+</Layout>
+
+<style>
+  .post-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .post-item {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fafafa;
+  }
+  
+  .post-meta {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .emoji {
+    font-size: 1.2em;
+  }
+  
+  .type {
+    background: #3b82f6;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+  }
+  
+  .post-item h3 {
+    margin: 0.5rem 0;
+  }
+  
+  .post-item h3 a {
+    color: #1f2937;
+    text-decoration: none;
+  }
+  
+  .post-item h3 a:hover {
+    color: #3b82f6;
+  }
+  
+  .topics {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+    flex-wrap: wrap;
+  }
+  
+  .topic-tag {
+    background: #e5e7eb;
+    color: #374151;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+  }
+  
+  .about {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: #f3f4f6;
+    border-radius: 8px;
+  }
+  
+  time {
+    color: #6b7280;
+    font-size: 0.9rem;
+  }
+</style>

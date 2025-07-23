@@ -1,0 +1,39 @@
+name: Deploy Personal Blog and Sync Zenn
+
+on:
+  push:
+    branches:
+      - main # mainブランチへのプッシュをトリガーとする
+
+jobs:
+  # Job 1: 個人ブログ（Astroサイト）をVercelにデプロイする
+  deploy_personal_blog:
+    runs-on: ubuntu-latest # 実行環境を指定
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4 # リポジトリのコードをチェックアウト
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4 # Node.js環境をセットアップ
+        with:
+          node-version: '20' # 最新のLTSバージョンを推奨
+          cache: 'npm'
+          cache-dependency-path: 'blog-app/package-lock.json' # Astroプロジェクトのロックファイルを指定
+
+      - name: Install Dependencies
+        working-directory: ./blog-app # Astroプロジェクトのディレクトリで実行
+        run: npm install
+
+      - name: Build Astro Site
+        working-directory: ./blog-app # Astroプロジェクトのディレクトリで実行
+        run: npm run build # ビルドコマンドを実行し、distディレクトリを生成
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20 # Vercelへのデプロイを行うサードパーティアクション
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-project-name: "wisdom-blog" # Vercel上のプロジェクト名
+          working-directory: ./blog-app # デプロイ対象のルートはblog-app
