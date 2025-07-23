@@ -64,8 +64,8 @@ class SmartArticleGenerator:
         if simple_log.exists():
             log_files.append(simple_log)
         
-        # Obsidianログ
-        obsidian_inbox = self.project_dir / "obsidian_vault" / "00_INBOX"
+        # Obsidianログ（iCloud同期版）
+        obsidian_inbox = Path("/Users/dd/Library/Mobile Documents/iCloud~md~obsidian/Documents/00_INBOX")
         if obsidian_inbox.exists():
             dev_logs = list(obsidian_inbox.glob("dev_log_*.md"))
             log_files.extend(dev_logs[-3:])  # 最新3日分
