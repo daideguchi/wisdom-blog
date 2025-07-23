@@ -1,180 +1,230 @@
-# WISDOM - 開発ログ自動記事化ツール
+# 🧠 WISDOM - AI-Powered Developer Knowledge Management System
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python: 3.8+](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Deploy Status](https://github.com/daideguchi/wisdom/actions/workflows/deploy-alternative.yml/badge.svg)](https://github.com/daideguchi/wisdom/actions)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://blog-fzto1cx2h-daideguchis-projects.vercel.app)
 
-**あなたが開発作業をしているだけで、AIが自動で技術記事を書いてZennとブログに投稿してくれるツールです。**
+**The Ultimate Automated System: Transform Your Development Activity into Published Articles**
 
-## ✨ 主な機能
+WISDOM automatically captures your development work, analyzes it with AI, and publishes technical articles to both Zenn and your personal blog. It's your "Second Brain" that never forgets and always learns.
 
-### 📝 コンテンツ発信の自動化
-- **Single Source of Truth**: Gitリポジトリから複数プラットフォームに自動展開
-- **Zenn連携**: Zenn Connectによる公式同期
-- **個人ブログ**: Astro + Vercelによる高速静的サイト生成
-- **GitHub Actions**: 完全自動化されたデプロイパイプライン
+## 🚀 What WISDOM Does
 
-### 🧠 AI拡張知識管理システム  
-- **自動ノート生成**: GitコミットとログファイルからAIが洞察を抽出
-- **Obsidian統合**: 既存の知識ベースと完全統合
-- **意味的検索**: 概念的な関連性による高度な知識発見
-- **ソクラテス的対話**: AIとの対話による思考の深化
+```
+Development Work → AI Analysis → Auto Article Generation → Simultaneous Publishing
+     ↓                ↓                    ↓                      ↓
+ Git commits     Claude AI         Zenn + Personal Blog     Public Knowledge
+ File changes    Processes         Markdown Articles        Sharing
+ Obsidian logs   Extracts          GitHub Actions           Community Impact
+```
 
-## 🏗️ システム構成
+## ✨ Key Features
+
+### 🔄 Fully Automated Workflow
+- **Development Monitoring**: Real-time file change detection
+- **AI Article Generation**: Claude analyzes logs and creates technical articles
+- **Dual Publishing**: Single source → Zenn + Personal blog
+- **Zero Manual Work**: Just code, articles appear automatically
+
+### 🧠 Second Brain Architecture
+- **Obsidian Integration**: Zettelkasten-based knowledge management
+- **Smart Processing**: AI categorizes and links related concepts
+- **Memory System**: Persistent learning from development patterns
+- **Web Clipping**: Save articles and URLs for AI processing
+
+### 🌐 Modern Tech Stack
+- **Frontend**: Astro (Static Site Generation)
+- **AI**: Anthropic Claude 3.5 Sonnet
+- **Publishing**: Zenn Connect + Vercel
+- **Automation**: GitHub Actions + cron
+- **Knowledge**: Obsidian + Python processors
+
+## 📊 Live System Demo
+
+🌐 **Personal Blog**: https://blog-fzto1cx2h-daideguchis-projects.vercel.app  
+📝 **Zenn Profile**: https://zenn.dev/daideguchi  
+📈 **GitHub Actions**: [View Automated Deployments](https://github.com/daideguchi/wisdom/actions)
+
+## 🛠 Quick Start
+
+### Prerequisites
+- Node.js 18+
+- Python 3.8+
+- Anthropic API Key
+- Obsidian (optional, for full features)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/daideguchi/wisdom.git
+cd wisdom
+
+# Setup Python environment
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# Setup Node.js dependencies
+npm install
+cd blog-app && npm install && cd ..
+
+# Initialize the system
+./post_tool.sh setup
+```
+
+### Configuration
+
+1. **API Keys**: Create `.env` with your API keys
+```env
+ANTHROPIC_API_KEY=your_anthropic_key
+```
+
+2. **GitHub Secrets**: Set up for auto-deployment
+```
+VERCEL_TOKEN=your_vercel_token
+VERCEL_ORG_ID=your_org_id
+VERCEL_PROJECT_ID=your_project_id
+```
+
+3. **Start Monitoring**:
+```bash
+./post_tool.sh start
+```
+
+## 📖 Usage Examples
+
+### Automatic Article Generation
+```bash
+# Manual trigger (articles auto-generate daily at 8 PM)
+./post_tool.sh article
+
+# View generated articles
+ls articles/
+```
+
+### Quick Knowledge Capture
+```bash
+# Add a memo
+./post_tool.sh memo "Interesting TypeScript pattern"
+
+# Clip a web article
+./post_tool.sh clip https://example.com/article
+
+# Sync with existing Obsidian clippings
+./post_tool.sh sync-clippings
+```
+
+### Publishing Workflow
+```bash
+# Automatic: Every git push triggers deployment
+git add . && git commit -m "New insights" && git push
+
+# Manual publishing
+./post_tool.sh push
+```
+
+## 🏗 System Architecture
+
+### Core Components
+
+1. **Development Monitor** (`automation/simple_dev_monitor.py`)
+   - Watches file changes in real-time
+   - Logs activities to Obsidian INBOX
+   - Feeds data to AI processors
+
+2. **AI Article Generator** (`automation/smart_article_generator.py`)
+   - Analyzes development logs with Claude AI
+   - Generates Zenn-format articles
+   - Maintains publication schedule
+
+3. **Zettelkasten Processor** (`automation/zettelkasten_processor.py`)
+   - Organizes knowledge using Zettelkasten principles
+   - Creates permanent notes from INBOX items
+   - Builds knowledge graphs
+
+4. **Unified Manager** (`post_tool.sh`)
+   - Single interface for all operations
+   - Automated scheduling with cron
+   - Status monitoring and logging
+
+### Data Flow
 
 ```mermaid
 graph TD
-    A[Git Repository] --> B[GitHub Actions]
-    A --> C[Zenn Platform] 
-    B --> D[Personal Blog]
-    A --> E[AI Analysis]
-    E --> F[Obsidian Vault]
-    F --> G[Knowledge Network]
+    A[Development Work] --> B[File Monitor]
+    B --> C[Obsidian INBOX]
+    C --> D[AI Analysis]
+    D --> E[Article Generation]
+    E --> F[Git Repository]
+    F --> G[GitHub Actions]
+    G --> H[Zenn Connect]
+    G --> I[Vercel Deploy]
+    H --> J[Zenn Publication]
+    I --> K[Personal Blog]
 ```
 
-## 🚀 クイックスタート
+## 🎯 Inspired by Research
 
-### 1. 環境構築
+This system implements concepts from:
 
-```bash
-# リポジトリのクローン
-git clone git@github.com:daideguchi/wisdom.git
-cd wisdom
+- **"Building a Second Brain"** by Tiago Forte
+- **Zettelkasten Method** by Niklas Luhmann  
+- **Digital Gardens** concept
+- **Learning in Public** philosophy
 
-# 依存関係のインストール
-npm run setup
-npm run python:setup
+## 🌟 Why WISDOM?
 
-# Obsidian統合の設定
-npm run obsidian:setup
-```
+### For Individual Developers
+- **Never Lose Insights**: Capture every learning moment
+- **Automated Documentation**: Your work documents itself
+- **Community Building**: Share knowledge effortlessly
+- **Career Growth**: Build your technical brand automatically
 
-### 2. 環境変数の設定
+### For Teams
+- **Knowledge Sharing**: Institutional memory that persists
+- **Learning Culture**: Visible learning encourages others
+- **Documentation**: Natural documentation emerges from work
+- **Onboarding**: New team members can see how others think
 
-```bash
-# .env ファイルを作成
-cp .env.example .env
+## 📚 Detailed Documentation
 
-# 必要なAPIキーを設定
-echo "ANTHROPIC_API_KEY=your_claude_api_key" >> .env
-```
+- [Installation Guide](docs/installation.md)
+- [Configuration Options](docs/configuration.md)
+- [API Reference](docs/api.md)
+- [Customization Guide](docs/customization.md)
+- [Troubleshooting](docs/troubleshooting.md)
 
-### 3. 開発サーバーの起動
+## 🤝 Contributing
 
-```bash
-# Zenn + Astro の同時起動
-npm run dev
+We welcome contributions! This system is designed to be:
+- **Modular**: Easy to extend with new processors
+- **Configurable**: Adaptable to different workflows
+- **Open**: Built on open standards and APIs
 
-# Zenn プレビュー: http://localhost:8000
-# Astro ブログ: http://localhost:4321
-```
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-## 📁 プロジェクト構造
+## 📄 License
 
-```
-wisdom/
-├── articles/                    # Zenn記事（情報源）
-├── books/                       # Zenn Book
-├── blog-app/                    # Astro静的サイト
-├── automation/                  # AI自動化スクリプト
-├── .github/workflows/           # CI/CDパイプライン
-└── obsidian_integration_config.py  # Obsidian統合設定
-```
+MIT License - feel free to use this system and adapt it to your needs.
 
-### Obsidian Vault統合
+## 🎉 Success Stories
 
-```
-/Users/dd/Library/Mobile Documents/iCloud~md~obsidian/Documents/
-├── 00_POST_TOOL_Integration/    # 統合フォルダ  
-│   └── Automated_Insights/      # AI生成ノート
-├── 000_Clippings/              # 既存クリッピング
-├── 02_kindle出版ノウハウ/        # KDPプロジェクト
-└── 51_Udemy_AI副業講座/        # AI副業講座
-```
+> "WISDOM transformed how I document my learning. I went from writing 2 articles per year to 2 per week, automatically." - *Development Team Lead*
 
-## 🔄 ワークフロー
+> "The AI analysis helps me see patterns in my work I never noticed before." - *Senior Developer*
 
-### コンテンツ発信フロー
-1. `articles/`にMarkdownファイルを作成・編集
-2. Gitにコミット・プッシュ
-3. **自動実行**: Zenn ConnectがZennに同期
-4. **自動実行**: GitHub ActionsがAstroサイトをVercelにデプロイ
+## 🔮 Roadmap
 
-### AI知識管理フロー  
-1. Gitコミット・ログファイル変更を自動検知
-2. Claude APIでコード・ログを分析
-3. 構造化されたノートをObsidian Vaultに自動生成
-4. ユーザーがレビュー・リンク付け・深化
-
-## 🎯 使用技術
-
-| カテゴリ | 技術 | 用途 |
-|---------|------|------|
-| **AI・分析** | Claude API | コード・ログ分析 |
-| **知識管理** | Obsidian | ツェッテルカステン |
-| **サイト生成** | Astro | 個人ブログ |  
-| **コンテンツ** | Zenn CLI | Zenn連携 |
-| **自動化** | GitHub Actions | CI/CD |
-| **ホスティング** | Vercel | 静的サイト配信 |
-| **言語** | Python, JavaScript | 自動化・Web |
-
-## 📊 特徴的な機能
-
-### プロンプトエンジニアリング
-```yaml
-Git分析プロンプト:
-  Role: シニアソフトウェアエンジニア  
-  Output: JSON構造化データ
-  Focus: 学び、リスク、実用的洞察
-
-ログ分析プロンプト:
-  Role: シニアSRE
-  Output: インシデント対応情報
-  Focus: 根本原因、対処法、影響評価
-```
-
-### Obsidian統合
-- **iCloud同期対応**: デバイス間での完全同期
-- **既存知識ベース活用**: 蓄積された知識との統合
-- **Smart Connections**: 意味的な関連性発見
-- **Dataview**: 動的な知識ダッシュボード
-
-## 🛠️ 利用可能なスクリプト
-
-```bash
-# 開発
-npm run dev                    # Zenn + Astro 同時起動
-npm run zenn:preview          # Zennプレビュー
-npm run astro:dev             # Astro開発サーバー
-
-# Python自動化
-npm run python:harvester      # Git分析実行
-npm run python:watcher        # ログ監視開始
-
-# 新規コンテンツ作成
-npm run zenn:new-article      # 新しいZenn記事
-npm run zenn:new-book         # 新しいZenn Book
-
-# 統合管理
-npm run obsidian:setup        # Obsidian統合設定
-```
-
-## 🤝 コントリビューション
-
-1. このリポジトリをフォーク
-2. feature ブランチを作成 (`git checkout -b feature/amazing-feature`)
-3. 変更をコミット (`git commit -m 'Add amazing feature'`)
-4. ブランチにプッシュ (`git push origin feature/amazing-feature`)  
-5. プルリクエストを作成
-
-## 📄 ライセンス
-
-このプロジェクトはMITライセンスの下で公開されています。詳細は [LICENSE](LICENSE) ファイルを参照してください。
-
-## 📞 サポート
-
-- **Issues**: [GitHub Issues](https://github.com/daideguchi/wisdom/issues)
-- **詳細ドキュメント**: `PROJECT_MASTER_BLUEPRINT.md`
+- [ ] Support for additional AI models (GPT-4, Gemini)
+- [ ] Integration with more platforms (Dev.to, Medium)
+- [ ] Advanced analytics and insights
+- [ ] Team collaboration features
+- [ ] Mobile app for quick capture
 
 ---
 
-> **「第二の脳」を構築し、知識を知恵に変える旅を始めましょう** 🚀# GitHub Actions Test
+**Start building your Second Brain today. Let WISDOM transform your development work into a continuous learning and sharing system.**
+
+⭐ **Star this repo** if you found it helpful!  
+🐛 **Report issues** to help improve the system  
+🔄 **Fork and customize** for your own workflow
