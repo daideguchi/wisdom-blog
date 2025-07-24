@@ -71,4 +71,4 @@ coverage/
 !obsidian_integration_config.py
 
 # MacOS iCloud sync files
-*.icloud
+*.icloudclient_secret_*.json

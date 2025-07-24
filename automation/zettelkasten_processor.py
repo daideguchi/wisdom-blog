@@ -113,6 +113,9 @@ tags: [zettelkasten, concept]
                     content = post.content
                     title = post.metadata.get('title', filename[:-3])
                     
+                    # frontmatter + content を統合してリンクを検索
+                    full_text = str(post.metadata) + "\n" + content
+                    
                     # 原子性チェック：複数のアイデアが含まれているか
                     if self._contains_multiple_ideas(content):
                         suggestions = self._suggest_note_split(content, title)
@@ -120,8 +123,10 @@ tags: [zettelkasten, concept]
                         for i, suggestion in enumerate(suggestions, 1):
                             print(f"   {i}. {suggestion}")
                     
-                    # 恒久ノート候補判定
-                    if self._is_permanent_note_candidate(content):
+                    # 恒久ノート候補判定（frontmatter込みで判定）
+                    is_candidate = self._is_permanent_note_candidate_full(content, full_text)
+                    
+                    if is_candidate:
                         self._promote_to_permanent(file_path, post)
                         processed_count += 1
                         
@@ -159,11 +164,60 @@ tags: [zettelkasten, concept]
         if len(links) < 1:
             return False
         
-        # 概念的内容のキーワードチェック
-        concept_keywords = ['原則', '法則', 'パターン', '理論', '概念', '手法', 'メソッド']
+        # 概念的内容のキーワードチェック（日本語 + 英語）
+        concept_keywords = [
+            # 日本語キーワード
+            '原則', '法則', 'パターン', '理論', '概念', '手法', 'メソッド', '仕組み', 'システム', 
+            '技術', '解説', '実装', '方法', '戦略', '設計', '構造', '機能', '特徴', '利点',
+            'エージェント', 'AI', '自動化', '統合', '連携', '最適化', 'ワークフロー',
+            # 英語キーワード（小文字で検索）
+            'agent', 'system', 'method', 'approach', 'technique', 'strategy', 'framework',
+            'implementation', 'integration', 'automation', 'workflow', 'architecture',
+            'technology', 'innovation', 'solution', 'optimization', 'functionality'
+        ]
+        
+        content_lower = content.lower()
         for keyword in concept_keywords:
-            if keyword in content:
+            if keyword.lower() in content_lower:
                 return True
+        
+        # 高品質コンテンツの追加判定（文字数 + リンクで十分価値がある）
+        if len(content) > 1000 and len(links) >= 2:
+            return True
+        
+        return False
+    
+    def _is_permanent_note_candidate_full(self, content, full_text):
+        """恒久ノート候補かどうか判定（frontmatter込み）"""
+        # 文字数チェック（本文ベース）
+        if len(content) < 200:
+            return False
+        
+        # リンクの存在チェック（frontmatter + 本文）
+        links = re.findall(r'\[\[([^\]]+)\]\]', full_text)
+        if len(links) < 1:
+            return False
+        
+        # 概念的内容のキーワードチェック（frontmatter + 本文）
+        concept_keywords = [
+            # 日本語キーワード
+            '原則', '法則', 'パターン', '理論', '概念', '手法', 'メソッド', '仕組み', 'システム', 
+            '技術', '解説', '実装', '方法', '戦略', '設計', '構造', '機能', '特徴', '利点',
+            'エージェント', 'AI', '自動化', '統合', '連携', '最適化', 'ワークフロー',
+            # 英語キーワード（小文字で検索）
+            'agent', 'system', 'method', 'approach', 'technique', 'strategy', 'framework',
+            'implementation', 'integration', 'automation', 'workflow', 'architecture',
+            'technology', 'innovation', 'solution', 'optimization', 'functionality'
+        ]
+        
+        full_text_lower = full_text.lower()
+        for keyword in concept_keywords:
+            if keyword.lower() in full_text_lower:
+                return True
+        
+        # 高品質コンテンツの追加判定（文字数 + リンクで十分価値がある）
+        if len(content) > 1000 and len(links) >= 2:
+            return True
         
         return False
     
@@ -185,7 +239,7 @@ tags: [zettelkasten, concept]
         new_path = os.path.join(self.permanent_path, new_filename)
         
         with open(new_path, 'w', encoding='utf-8') as f:
-            frontmatter.dump(post, f)
+            f.write(frontmatter.dumps(post))
         
         # 元ファイル削除
         os.remove(inbox_path)

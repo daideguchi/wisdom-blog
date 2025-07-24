@@ -105,7 +105,7 @@ class SimpleDevMonitor:
                     # ログをObsidianに保存（軽量）
                     self.save_to_obsidian(log_entry)
                 
-                time.sleep(300)  # 5分間隔（軽量化）
+                time.sleep(1800)  # 30分間隔（適切な頻度）
                 
             except KeyboardInterrupt:
                 self.log_event("INFO", "監視停止")

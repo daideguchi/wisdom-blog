@@ -18,11 +18,14 @@ case "$1" in
             crontab -l 2>/dev/null || true
             echo "0 9,15,21 * * * cd $PROJECT_DIR && source venv/bin/activate && python automation/zettelkasten_processor.py >> logs/zettelkasten.log 2>&1"
             echo "0 20 * * * cd $PROJECT_DIR && source venv/bin/activate && python automation/smart_article_generator.py >> logs/smart_article.log 2>&1"
+            echo "0 */2 * * * cd $PROJECT_DIR && source venv/bin/activate && python automation/obsidian_sync.py >> logs/obsidian_sync.log 2>&1"
         } | crontab -
         echo "✅ 軽量自動化システム開始完了"
         echo "📅 スケジュール:"
         echo "   🧠 ツェッテルカステン整理: 朝9時、午後3時、夜9時"
         echo "   🤖 AI記事生成: 毎日夜8時"
+        echo "   🔄 Obsidian同期: 2時間毎"
+        echo "   ⚡ 開発監視: 手動開始（30分間隔）"
         ;;
     
     "stop")
@@ -35,7 +38,14 @@ case "$1" in
     "status")
         echo "📊 現在の自動化設定:"
         echo "===================="
-        crontab -l 2>/dev/null | grep -E "(zettelkasten_processor|smart_article_generator)" || echo "❌ 自動化設定なし"
+        crontab -l 2>/dev/null | grep -E "(zettelkasten_processor|smart_article_generator|obsidian_sync)" || echo "❌ 自動化設定なし"
+        echo ""
+        echo "🔍 プロセス状況:"
+        if pgrep -f "simple_dev_monitor.py" > /dev/null; then
+            echo "   📊 開発監視: 稼働中 (PID: $(pgrep -f simple_dev_monitor.py))"
+        else
+            echo "   📊 開発監視: 停止中"
+        fi
         ;;
     
     # ========== 手動実行 ==========
