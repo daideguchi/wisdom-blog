@@ -1,6 +1,6 @@
 # 🧠 WISDOM - AI駆動開発者知識管理システム
 
-[![デプロイステータス](https://github.com/daideguchi/wisdom/actions/workflows/deploy-alternative.yml/badge.svg)](https://github.com/daideguchi/wisdom/actions)
+[![デプロイステータス](https://github.com/daideguchi/wisdom-blog/actions/workflows/deploy-alternative.yml/badge.svg)](https://github.com/daideguchi/wisdom-blog/actions)
 [![ライブデモ](https://img.shields.io/badge/Live-Demo-brightgreen)](https://blog-fzto1cx2h-daideguchis-projects.vercel.app)
 
 **完全自動化システム：開発活動を技術記事に自動変換**
@@ -42,7 +42,7 @@ Obsidianログ 内容抽出   GitHub Actions  影響力拡大
 
 🌐 **個人ブログ**: https://blog-fzto1cx2h-daideguchis-projects.vercel.app  
 📝 **Zennプロフィール**: https://zenn.dev/daideguchi  
-📈 **GitHub Actions**: [自動デプロイ確認](https://github.com/daideguchi/wisdom/actions)
+📈 **GitHub Actions**: [自動デプロイ確認](https://github.com/daideguchi/wisdom-blog/actions)
 
 ## 🛠 クイックスタート
 
@@ -56,8 +56,8 @@ Obsidianログ 内容抽出   GitHub Actions  影響力拡大
 
 ```bash
 # リポジトリをクローン
-git clone https://github.com/daideguchi/wisdom.git
-cd wisdom
+git clone https://github.com/daideguchi/wisdom-blog.git
+cd wisdom-blog
 
 # Python環境セットアップ
 python3 -m venv venv
