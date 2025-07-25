@@ -15,8 +15,23 @@ const publishedPosts = posts
 ---
 
 <Layout title="WISDOM Blog - 開発ログ自動記事化">
-  <h1>🚀 WISDOM Blog</h1>
-  <p>開発ログから自動生成された技術記事を公開しています</p>
+  <header class="blog-header">
+    <div class="header-content">
+      <h1>🚀 WISDOM Blog</h1>
+      <p>開発ログから自動生成された技術記事を公開しています</p>
+      <div class="github-links">
+        <a href="https://github.com/dd17-gmail-com/wisdom-blog" class="github-link" target="_blank" rel="noopener">
+          📁 ソースコード
+        </a>
+        <a href="https://github.com/dd17-gmail-com/knowledge-synthesizer" class="github-link" target="_blank" rel="noopener">
+          🧠 知識統合システム
+        </a>
+        <a href="https://github.com/dd17-gmail-com/collaborative-research-agents" class="github-link" target="_blank" rel="noopener">
+          🤖 AI研究エージェント
+        </a>
+      </div>
+    </div>
+  </header>
   
   <section>
     <h2>📝 最新記事</h2>
@@ -55,10 +70,141 @@ const publishedPosts = posts
       このブログは、日々の開発活動から自動的に技術記事を生成するWISDOMシステムによって運営されています。
       GitログやObsidianノートを分析し、AIが記事化した内容をZennと同時公開しています。
     </p>
+    
+    <h3>🚀 オープンソースプロジェクト</h3>
+    <div class="projects-grid">
+      <div class="project-card">
+        <h4>📁 WISDOM Blog</h4>
+        <p>このブログのソースコード。Astro + AI自動記事生成システム</p>
+        <a href="https://github.com/dd17-gmail-com/wisdom-blog" target="_blank" rel="noopener">GitHub で見る</a>
+      </div>
+      
+      <div class="project-card">
+        <h4>🧠 Knowledge Synthesizer</h4>
+        <p>ツェッテルカステン × AI知識統合システム</p>
+        <a href="https://github.com/dd17-gmail-com/knowledge-synthesizer" target="_blank" rel="noopener">GitHub で見る</a>
+      </div>
+      
+      <div class="project-card">
+        <h4>🤖 Collaborative Research Agents</h4>
+        <p>Multi-Agent AI研究システム</p>
+        <a href="https://github.com/dd17-gmail-com/collaborative-research-agents" target="_blank" rel="noopener">GitHub で見る</a>
+      </div>
+    </div>
+    
+    <p class="community-note">
+      ⭐ プロジェクトが役に立ったらGitHubでスターをつけていただけると励みになります！
+      <br>
+      💬 質問や改善提案は各リポジトリのIssuesでお気軽にどうぞ。
+    </p>
   </section>
 </Layout>
 
 <style>
+  .blog-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+  }
+  
+  .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    text-align: center;
+  }
+  
+  .header-content h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2.5rem;
+  }
+  
+  .header-content p {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+  
+  .github-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .github-link {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+  
+  .github-link:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+  }
+  
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  
+  .project-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .project-card h4 {
+    margin: 0 0 0.5rem 0;
+    color: #1f2937;
+    font-size: 1.1rem;
+  }
+  
+  .project-card p {
+    color: #6b7280;
+    margin: 0 0 1rem 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  
+  .project-card a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+  
+  .project-card a:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+  }
+  
+  .community-note {
+    background: #f0f9ff;
+    border-left: 4px solid #3b82f6;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #1e40af;
+  }
+
   .post-list {
     list-style: none;
     padding: 0;
